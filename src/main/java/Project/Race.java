@@ -12,14 +12,22 @@ public class Race {
     String location;
     String eventName;
 
-    ArrayList<>
+    ArrayList<Driver> drivers;
 
     public Race(int rounds, String country, String location, String eventName) {
         this.rounds = rounds;
         this.country = country;
         this.location = location;
-        this.eventName = eventName;
+        this.eventName = eventName;java
+
+        drivers = new ArrayList<>();
     }
 
+    void addDriver(Driver driver) {
+        drivers.add(driver);
+    }
 
+    ArrayList<Driver> getDrivers () {
+        return drivers;
+    }
 }

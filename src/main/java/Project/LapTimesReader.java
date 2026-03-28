@@ -50,21 +50,19 @@ public class LapTimesReader {
     private final int ROUND = 30;
     private final int COUNTRY = 31;
     private final int LOCATION = 32;
-    private final int EVENT = 33;
-    private final int NAME = 34;
-
-
+    private final int EVENT_NAME = 33;
 
     void readCSV () {
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             br.readLine(); // skip header
             String line;
+            ArrayList<Race> races = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] tokens = line.split(",");
-                for (String token : tokens) {
-
-                }
+                Race race = new Race(tokens[ROUND], tokens[COUNTRY], tokens[LOCATION], tokens[EVENT_NAME]);
+                race.addDriver(new Driver());
+                races.add(race);
             }
 
         } catch (IOException e) {

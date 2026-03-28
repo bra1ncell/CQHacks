@@ -17,11 +17,10 @@ type Props = {
 };
 
 export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props) {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
   const [entered, setEntered] = useState(false);
   const [fsRace, setFsRace] = useState<RaceCard | null>(null);
   const [gridCols, setGridCols] = useState(5);
-  const userHasClickedGrid = useRef(false);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
@@ -46,7 +45,9 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
   }, []);
 
   useEffect(() => {
-    scrollCardIntoView(selected);
+    if (selected !== null) {
+      scrollCardIntoView(selected);
+    }
   }, [selected, scrollCardIntoView]);
 
   const beginTransition = useCallback((race: RaceCard) => {
@@ -74,19 +75,21 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
       }
       if (e.key === "ArrowRight") {
         e.preventDefault();
-        setSelected((s) => Math.min(s + 1, max));
+        setSelected((s) => (s === null ? 0 : Math.min(s + 1, max)));
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        setSelected((s) => Math.max(s - 1, 0));
+        setSelected((s) => (s === null ? max : Math.max(s - 1, 0)));
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelected((s) => Math.min(s + gridCols, max));
+        setSelected((s) => (s === null ? 0 : Math.min(s + gridCols, max)));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelected((s) => Math.max(s - gridCols, 0));
+        setSelected((s) => (s === null ? max : Math.max(s - gridCols, 0)));
       } else if (e.key === "Enter") {
         e.preventDefault();
-        beginTransition(HARDCODED_RACES[selected]);
+        if (selected !== null) {
+          beginTransition(HARDCODED_RACES[selected]);
+        }
       } else if (e.key === "Escape") {
         e.preventDefault();
         onBackToIntro();
@@ -96,20 +99,16 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
     return () => window.removeEventListener("keydown", onKey);
   }, [selected, fsRace, gridCols, beginTransition, onBackToIntro]);
 
-  const handleCardClick = (i: number) => {
-    if (!userHasClickedGrid.current) {
-      userHasClickedGrid.current = true;
-      setSelected(i);
-      return;
-    }
-    if (i === selected) {
+  /** Double-click: first selects (red glow); second on same card confirms. Hover glow is CSS-only. */
+  const handleCardDoubleClick = (i: number) => {
+    if (selected === i) {
       beginTransition(HARDCODED_RACES[i]);
     } else {
       setSelected(i);
     }
   };
 
-  const race = HARDCODED_RACES[selected];
+  const race = selected !== null ? HARDCODED_RACES[selected] : null;
 
   return (
     <div className={`race-hub ${entered ? "race-hub--visible" : ""}`}>
@@ -127,7 +126,7 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
       <header className="race-hub__header">
         <div className="race-hub__title-block">
           <h1 className="race-hub__title">Race Selector</h1>
-          <p className="race-hub__subtitle">Choose a race</p>
+          <p className="race-hub__subtitle">Hover to preview · double-click to select · double-click again or OK to enter</p>
         </div>
       </header>
 
@@ -137,10 +136,10 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
             className="race-hub__grid"
             role="listbox"
             aria-label="Races"
-            aria-activedescendant={`race-card-${race.round}`}
+            aria-activedescendant={race ? `race-card-${race.round}` : undefined}
           >
             {HARDCODED_RACES.map((r: RaceCard, i) => {
-              const isSel = i === selected;
+              const isSel = selected !== null && i === selected;
               return (
                 <button
                   key={r.round}
@@ -152,7 +151,7 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
                   aria-selected={isSel}
                   id={`race-card-${r.round}`}
                   className={`race-card ${isSel ? "race-card--selected" : ""}`}
-                  onClick={() => handleCardClick(i)}
+                  onDoubleClick={() => handleCardDoubleClick(i)}
                 >
                   <div
                     className="race-card__thumb"
@@ -214,7 +213,8 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
         <button
           type="button"
           className="race-hub__pill race-hub__pill--primary"
-          onClick={() => beginTransition(race)}
+          disabled={race === null}
+          onClick={() => race && beginTransition(race)}
         >
           <span>OK</span>
           <span className="race-hub__pill-arrow">→</span>

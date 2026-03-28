@@ -1,43 +1,54 @@
 package com.cqhacks.racelive.demo;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Logic equivalent to the team's {@code Main.main()} — reads LapTimes.csv and prints the first race summary.
- * <p>
- * Original (root {@code Main.java}):
- * <pre>
- * LapTimesReader LTReader = new LapTimesReader(".../LapTimes.csv");
- * ArrayList&lt;Race&gt; races = LTReader.readCSV();
- * System.out.println(races.get(0).toString());
- * </pre>
+ * Ported team {@code Main}: LapTimes → merge RaceResults → race summary + {@link InsightGenerator}.
  */
 public final class CsvDemoMain {
 
     private CsvDemoMain() {}
 
-    public static String firstRaceSummary(Path lapTimesCsv) {
-        LapTimesReader reader = new LapTimesReader(lapTimesCsv.toString());
-        List<Race> races = reader.readCSV();
+    public static String firstRaceSummary(Path lapTimesCsv, Path raceResultsCsv) {
+        return runDemo(lapTimesCsv, raceResultsCsv, 0);
+    }
+
+    /** {@code round <= 0} uses the first race in file order. */
+    public static String summaryForRound(Path lapTimesCsv, Path raceResultsCsv, int round) {
+        return runDemo(lapTimesCsv, raceResultsCsv, round);
+    }
+
+    private static String runDemo(Path lapTimesCsv, Path raceResultsCsv, int round) {
+        LapTimesReader ltReader = new LapTimesReader(lapTimesCsv.toString());
+        ArrayList<Race> races = new ArrayList<>(ltReader.readCSV());
         if (races.isEmpty()) {
             return "No races parsed from LapTimes.csv (check path and file).";
         }
-        return races.get(0).toString();
-    }
 
-    /** Prefer race whose round matches the session; fallback to first race. */
-    public static String summaryForRound(Path lapTimesCsv, int round) {
-        LapTimesReader reader = new LapTimesReader(lapTimesCsv.toString());
-        List<Race> races = reader.readCSV();
-        if (races.isEmpty()) {
-            return "No races parsed from LapTimes.csv.";
-        }
-        for (Race race : races) {
-            if (race.getRounds() == round) {
-                return race.toString();
+        RaceResultsReader rrReader = new RaceResultsReader(raceResultsCsv.toString());
+        rrReader.readCSV(races);
+
+        Race target = null;
+        if (round > 0) {
+            for (Race r : races) {
+                if (r.getRounds() == round) {
+                    target = r;
+                    break;
+                }
             }
         }
-        return "No race with round " + round + " in CSV; showing first race:\n\n" + races.get(0).toString();
+        if (target == null) {
+            target = races.get(0);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(target.toString());
+        sb.append("\n──────── Insights ────────\n");
+        InsightGenerator gen = new InsightGenerator(target);
+        for (String line : gen.generateAll()) {
+            sb.append(line).append('\n');
+        }
+        return sb.toString();
     }
 }

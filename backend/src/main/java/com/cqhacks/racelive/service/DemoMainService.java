@@ -16,9 +16,10 @@ public class DemoMainService {
 
     public String runDemoForRound(int round) {
         Path lap = paths.getLapTimesCsv();
+        Path results = paths.getRaceResultsCsv();
         if (round <= 0) {
-            return CsvDemoMain.firstRaceSummary(lap);
+            return CsvDemoMain.firstRaceSummary(lap, results);
         }
-        return CsvDemoMain.summaryForRound(lap, round);
+        return CsvDemoMain.summaryForRound(lap, results, round);
     }
 }

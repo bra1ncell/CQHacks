@@ -57,6 +57,6 @@ public class RaceResultsReader {
             System.out.println("File not found! " + e.getMessage());
         }
     }
-
 }
+
 

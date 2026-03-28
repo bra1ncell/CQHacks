@@ -1,0 +1,142 @@
+import { useCallback, useEffect, useState } from "react";
+import "./StartScreen.css";
+
+export type StartDestination = "events" | "race-live";
+
+type Props = {
+  onNavigate: (dest: StartDestination) => void;
+};
+
+const OPTIONS: { id: StartDestination; label: string }[] = [
+  { id: "events", label: "Events" },
+  { id: "race-live", label: "RACE LIVE" },
+];
+
+/** Files live in frontend/public/asset/images/ — Vite serves them at BASE_URL + asset/images/... */
+const SLIDE_FILES = ["1.jpg", "2.jpg", "3.jpg"] as const;
+
+function publicImageUrl(file: string): string {
+  const base = import.meta.env.BASE_URL;
+  const prefix = base.endsWith("/") ? base : `${base}/`;
+  return `${prefix}asset/images/${file}`;
+}
+
+const SLIDE_INTERVAL_MS = 5500;
+const SLIDE_FADE_MS = 1200;
+
+function IconEvents() {
+  return (
+    <svg className="mk-icon-svg" viewBox="0 0 48 48" aria-hidden>
+      <rect x="8" y="10" width="32" height="28" rx="3" fill="#4fc3f7" stroke="#0277bd" strokeWidth="2" />
+      <rect x="12" y="14" width="24" height="6" rx="1" fill="#fff9c4" />
+      <rect x="14" y="24" width="6" height="6" rx="1" fill="#e53935" />
+      <rect x="22" y="24" width="6" height="6" rx="1" fill="#fff" />
+      <rect x="30" y="24" width="6" height="6" rx="1" fill="#43a047" />
+    </svg>
+  );
+}
+
+function IconRaceLive() {
+  return (
+    <svg className="mk-icon-svg" viewBox="0 0 48 48" aria-hidden>
+      <circle cx="24" cy="24" r="18" fill="#37474f" stroke="#ffd54a" strokeWidth="2" />
+      <circle cx="24" cy="24" r="14" fill="#263238" />
+      <path
+        d="M24 14 L24 24 L32 28"
+        fill="none"
+        stroke="#ffd54a"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="24" cy="24" r="2.5" fill="#ffd54a" />
+    </svg>
+  );
+}
+
+export default function StartScreen({ onNavigate }: Props) {
+  const [index, setIndex] = useState(0);
+  const [slide, setSlide] = useState(0);
+
+  const confirm = useCallback(() => {
+    onNavigate(OPTIONS[index].id);
+  }, [index, onNavigate]);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSlide((s) => (s + 1) % SLIDE_FILES.length);
+    }, SLIDE_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
+        e.preventDefault();
+        setIndex((i) => Math.min(i + 1, OPTIONS.length - 1));
+      } else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
+        e.preventDefault();
+        setIndex((i) => Math.max(i - 1, 0));
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        confirm();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [confirm]);
+
+  return (
+    <div className="start-screen">
+      <div className="start-layout">
+        <div className="start-menu-panel">
+          <p className="start-brand">CQHacks</p>
+          <nav className="start-nav" aria-label="Main menu">
+            {OPTIONS.map((opt, i) => {
+              const selected = i === index;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`mk-menu-btn ${selected ? "mk-menu-btn--selected" : ""}`}
+                  onClick={() => {
+                    setIndex(i);
+                    onNavigate(opt.id);
+                  }}
+                  onMouseEnter={() => setIndex(i)}
+                  onFocus={() => setIndex(i)}
+                >
+                  <span className="mk-menu-btn__frame" aria-hidden>
+                    {opt.id === "events" ? <IconEvents /> : <IconRaceLive />}
+                  </span>
+                  <span className="mk-menu-btn__track">
+                    <span className="mk-menu-btn__label">{opt.label}</span>
+                    {selected && <span className="mk-menu-btn__chevrons" aria-hidden />}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+          <p className="start-hint">↑↓ navigate · Enter to select</p>
+        </div>
+
+        <div className="start-art-panel">
+          <div className="start-art-slides" aria-hidden>
+            {SLIDE_FILES.map((file, i) => (
+              <img
+                key={file}
+                src={publicImageUrl(file)}
+                alt=""
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className={`start-art-slide ${i === slide ? "start-art-slide--visible" : ""}`}
+                style={{ transitionDuration: `${SLIDE_FADE_MS}ms` }}
+              />
+            ))}
+          </div>
+          <div className="start-art-overlay" />
+        </div>
+      </div>
+    </div>
+  );
+}

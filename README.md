@@ -1,79 +1,15 @@
-# CQHacks — Race Live
+# CQHacks (we need a title)
 
-React (Vite) frontend and Java (Spring Boot) backend that expose Formula 1–style race data from CSV files.
+## To Run
 
-## Prerequisites
-
-- **JDK 17+** (tested with JDK 17–22)
-- **Node.js 18+** and **npm** (for the frontend)
-
-## Data files
-
-Place these files in the **repository root** (same folder as `README.md`):
-
-- `RaceResults.csv`
-- `LapTimes.csv` (large; consider keeping it out of Git — see below)
-
-If the files live elsewhere, set absolute paths when starting the backend:
-
-```bash
-export RACE_RESULTS_CSV=/path/to/RaceResults.csv
-export LAP_TIMES_CSV=/path/to/LapTimes.csv
 ```
-
-## Run the backend
-
-From the `backend/` directory (so default paths resolve to `../RaceResults.csv` and `../LapTimes.csv`):
-
-```bash
-cd backend
-./mvnw spring-boot:run
-```
-
-- Health: [http://localhost:8080/api/health](http://localhost:8080/api/health)
-- All race results: [http://localhost:8080/api/race-results](http://localhost:8080/api/race-results)
-- Lap times for a round (capped): `http://localhost:8080/api/lap-times?round=1&limit=500`
-
-CORS allows the Vite dev server at `http://localhost:5173`.
-
-## Run the frontend
-
-```bash
-cd frontend
 npm install
 npm run dev
 ```
-
-Open the URL printed in the terminal (usually [http://localhost:5173](http://localhost:5173)).  
-API requests use the Vite dev proxy: `/api/*` → `http://localhost:8080`.
-
-## GitHub
-
-1. Create an empty repository on GitHub.
-2. In this folder:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial Race Live stack (React + Spring Boot)"
-   git branch -M main
-   git remote add origin <your-repo-url>
-   git push -u origin main
-   ```
-
-3. **`LapTimes.csv`** is large (~10 MB). To avoid committing it, add `LapTimes.csv` to `.gitignore` (see the commented line in `.gitignore`) and document that teammates must copy the file locally. For binaries at scale, consider [Git LFS](https://git-lfs.com).
-
-## Project layout
+in /frontend
 
 ```
-CQHacks/
-  README.md
-  RaceResults.csv
-  LapTimes.csv
-  backend/          # Spring Boot API (Maven Wrapper included)
-  frontend/         # Vite + React + TypeScript
+./mvnw spring-boot:run
 ```
 
-## License
-
-Use for CQHacks / your team; add a license if you publish publicly.
+in /backend

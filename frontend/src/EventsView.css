@@ -1,0 +1,72 @@
+.events-view {
+  min-height: 100%;
+  padding: 1.5rem;
+  background: radial-gradient(ellipse 120% 80% at 50% 0%, #1a2230 0%, #0b0e12 55%);
+}
+
+.events-back {
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0;
+  border: none;
+  background: none;
+  color: #9aa0a6;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.events-back:hover {
+  color: #e8eaed;
+}
+
+.events-card {
+  max-width: 36rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.events-title {
+  margin: 0 0 0.75rem;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 1.75rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: #ffd54a;
+}
+
+.events-lead {
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+  color: #c4c7cc;
+}
+
+.events-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.03) 8px,
+    rgba(255, 255, 255, 0.06) 8px,
+    rgba(255, 255, 255, 0.06) 16px
+  );
+}
+
+.events-badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(255, 213, 74, 0.15);
+  color: #ffd54a;
+  border: 1px solid rgba(255, 213, 74, 0.35);
+}

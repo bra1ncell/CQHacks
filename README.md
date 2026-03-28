@@ -1,5 +1,6 @@
-# CQHacks (we need a title)
+# RaceLive
 
+# How to Run
 ```
 npm install
 npm run dev

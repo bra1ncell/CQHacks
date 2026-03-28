@@ -1,0 +1,66 @@
+.race-session {
+  min-height: 100vh;
+  padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem;
+  background: linear-gradient(165deg, #0a0608 0%, #120810 40%, #050508 100%);
+  color: #f0f0f0;
+}
+
+.race-session__back {
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.race-session__back:hover {
+  color: #fff;
+}
+
+.race-session__main {
+  max-width: 36rem;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.race-session__title {
+  margin: 0 0 0.35rem;
+  font-family: "Archivo Black", sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.race-session__loc {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.race-session__placeholder {
+  margin: 0 0 1.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.95rem;
+}
+
+.race-session__cta {
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 82, 82, 0.5);
+  background: rgba(198, 40, 40, 0.35);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.race-session__cta:hover {
+  background: rgba(198, 40, 40, 0.55);
+  border-color: rgba(255, 120, 120, 0.6);
+}

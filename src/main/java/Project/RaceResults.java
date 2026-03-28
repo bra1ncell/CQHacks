@@ -7,7 +7,7 @@ import java.io.IOException;
 public class RaceResultsReader {
     String fileName = "RaceResults.csv";
     public RaceResultsReader (String fileName) {
-        this.fileName = fileName
+        this.fileName = fileName;
     }
 
     /*
@@ -39,11 +39,10 @@ public class RaceResultsReader {
     private final int ROUND = 20;
     private final int COUNTRY = 21;
     private final int LOCATION = 22;
-    private final int EVENT = 23;
-    private final int NAME = 24;
-    private final int Q1 = 25;
-    private final int Q2 = 26;
-    private final int Q3 = 27;
+    private final int EVENT_NAME = 23;
+    private final int Q1 = 24;
+    private final int Q2 = 25;
+    private final int Q3 = 26;
 
 
 
@@ -51,7 +50,15 @@ public class RaceResultsReader {
     void readCSV () {
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
-            br.readLine(); // skip header
+            br.readLine();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split(",");
+                for (String token : tokens) {
+
+                }
+            }
 
         } catch (IOException e) {
             System.out.println("File not found! " + e.getMessage());

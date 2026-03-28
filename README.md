@@ -1,14 +1,15 @@
 # RaceLive
 
 # How to Run
+in /frontend
 ```
 npm install
 npm run dev
 ```
-in /frontend
 
+in /backend
 ```
 ./mvnw spring-boot:run
 ```
 
-in /backend
+

@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class Driver {
 
     // Identity — constant across all laps
-    String name;          // e.g. "VER"
-    int    driverNumber;  // e.g. 1
+    String name;
+    int    driverNumber;
     String broadcastName;
     String abbreviation;
     String driverID;
-    String team;          // e.g. "Red Bull Racing"
+    String team;
     String teamColor;
     String teamID;
     String firstName;
@@ -21,23 +21,23 @@ public class Driver {
 
     ArrayList<Lap> laps;
 
-    public Driver(String name, int driverNumber, String braodcastName, String abbreviation,
+    public Driver(String name, int driverNumber, String broadcastName, String abbreviation, // fixed: braodcastName -> broadcastName
                   String driverID, String team, String teamColor, String teamID, String firstName,
                   String lastName, String fullName, String headshotUrl, String countryCode) {
-        this.name         = name;
-        this.driverNumber = driverNumber;
+        this.name          = name;
+        this.driverNumber  = driverNumber;
         this.broadcastName = broadcastName;
         this.abbreviation  = abbreviation;
-        this.driverId      = driverId;
-        this.team         = team;
+        this.driverID      = driverID;      // fixed: driverId -> driverID
+        this.team          = team;
         this.teamColor     = teamColor;
-        this.teamId        = teamId;
+        this.teamID        = teamID;        // fixed: teamId -> teamID
         this.firstName     = firstName;
         this.lastName      = lastName;
         this.fullName      = fullName;
         this.headshotUrl   = headshotUrl;
         this.countryCode   = countryCode;
-        this.laps         = new ArrayList<>();
+        this.laps          = new ArrayList<>();
     }
 
     void addLap(Lap lap) {

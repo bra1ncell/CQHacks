@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: racelive-api
+
+app:
+  # Defaults: CQHacks repo root is parent of backend/ (run bootRun from backend/)
+  race-results-csv: ${RACE_RESULTS_CSV:}
+  lap-times-csv: ${LAP_TIMES_CSV:}

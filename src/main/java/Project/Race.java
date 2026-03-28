@@ -1,5 +1,7 @@
 package Project;
 
+import java.util.ArrayList;
+
 public class Race {
     /*
      * Time,Driver,DriverNumber,LapTime,LapNumber,Stint,PitOutTime,PitInTime,Sector1Time,Sector2Time,Sector3Time,Sector1SessionTime,Sector2SessionTime,
@@ -18,7 +20,7 @@ public class Race {
         this.rounds = rounds;
         this.country = country;
         this.location = location;
-        this.eventName = eventName;java
+        this.eventName = eventName;
 
         drivers = new ArrayList<>();
     }
@@ -37,7 +39,7 @@ public class Race {
 
         sb.append("╔══════════════════════════════════════════════════════╗\n")
                 .append("  Race   : ").append(eventName).append("\n")
-                .append("  Round  : ").append(round).append("\n")
+                .append("  Round  : ").append(rounds).append("\n")
                 .append("  Country: ").append(country).append("\n")
                 .append("  Circuit: ").append(location).append("\n")
                 .append("  Drivers: ").append(drivers.size()).append("\n")

@@ -3,7 +3,7 @@ package Project;
 public class Lap {
 
     // Per-lap timing
-    String sessionTime;     // "Time" col — session clock at lap end
+    String sessionTime;
     String lapTime;
     Double lapNumber;
     Double stint;
@@ -28,7 +28,7 @@ public class Lap {
 
     // Tyre
     boolean isPersonalBest;
-    String  compound;       // e.g. "INTERMEDIATE"
+    String  compound;
     Double  tyreLife;
     boolean freshTyre;
 
@@ -81,6 +81,20 @@ public class Lap {
         this.fastF1Generated    = fastF1Generated;
         this.isAccurate         = isAccurate;
     }
+
+    // ── Helpers for toString ──────────────────────────────────────────────────
+
+    /** Formats a Double as a whole number, or "—" if null. */
+    private String fmt(Double d) {
+        return d != null ? String.format("%.0f", d) : "—";
+    }
+
+    /** Returns the String as-is, or "—" if null or blank. */
+    private String fmt(String s) {
+        return (s != null && !s.isBlank()) ? s : "—";
+    }
+
+    // ── toString ─────────────────────────────────────────────────────────────
 
     @Override
     public String toString() {

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 public class Main {
 
     static void main() {
-        ArrayList<Race> races = LapTimesReader("LapTimes.csv");
+        LapTimesReader LTReader = new LapTimesReader("src/main/java/resources/LapTimes.csv");
+        ArrayList<Race> races = LTReader.readCSV();
+        //System.out.println(races.get(0).toString());
         for (Race race : races) {
             System.out.println(race.toString());
         }

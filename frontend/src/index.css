@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #050508;
+  color-scheme: dark;
+}
+
 html,
 body,
 #root {
@@ -13,7 +18,12 @@ body,
 
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
-  background: #0b0e12;
+  background-color: #050508;
   color: #e8eaed;
   -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100%;
+  background-color: #050508;
 }

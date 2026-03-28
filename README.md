@@ -1,7 +1,5 @@
 # CQHacks (we need a title)
 
-## To Run
-
 ```
 npm install
 npm run dev

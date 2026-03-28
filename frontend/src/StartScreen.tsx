@@ -3,8 +3,13 @@ import "./StartScreen.css";
 
 export type StartDestination = "events" | "race-live";
 
+const INTRO_TOTAL_MS = 3000;
+const INTRO_FADE_MS = 800;
+
 type Props = {
   onNavigate: (dest: StartDestination) => void;
+  /** Fires after intro duration (with fade). Skipped if user picks a menu item first. */
+  onIntroComplete: () => void;
 };
 
 const OPTIONS: { id: StartDestination; label: string }[] = [
@@ -54,9 +59,10 @@ function IconRaceLive() {
   );
 }
 
-export default function StartScreen({ onNavigate }: Props) {
+export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
   const [index, setIndex] = useState(0);
   const [slide, setSlide] = useState(0);
+  const [exiting, setExiting] = useState(false);
 
   const confirm = useCallback(() => {
     onNavigate(OPTIONS[index].id);
@@ -68,6 +74,16 @@ export default function StartScreen({ onNavigate }: Props) {
     }, SLIDE_INTERVAL_MS);
     return () => window.clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    const fadeAt = Math.max(0, INTRO_TOTAL_MS - INTRO_FADE_MS);
+    const fadeTimer = window.setTimeout(() => setExiting(true), fadeAt);
+    const doneTimer = window.setTimeout(() => onIntroComplete(), INTRO_TOTAL_MS);
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [onIntroComplete]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -87,7 +103,24 @@ export default function StartScreen({ onNavigate }: Props) {
   }, [confirm]);
 
   return (
-    <div className="start-screen">
+    <div className={`start-screen ${exiting ? "start-screen--exiting" : ""}`}>
+      <div className="start-screen-media" aria-hidden>
+        <div className="start-art-slides">
+          {SLIDE_FILES.map((file, i) => (
+            <img
+              key={file}
+              src={publicImageUrl(file)}
+              alt=""
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              className={`start-art-slide ${i === slide ? "start-art-slide--visible" : ""}`}
+              style={{ transitionDuration: `${SLIDE_FADE_MS}ms` }}
+            />
+          ))}
+        </div>
+        <div className="start-screen-media-overlay" />
+      </div>
+
       <div className="start-layout">
         <div className="start-menu-panel">
           <p className="start-brand">CQHacks</p>
@@ -120,22 +153,7 @@ export default function StartScreen({ onNavigate }: Props) {
           <p className="start-hint">↑↓ navigate · Enter to select</p>
         </div>
 
-        <div className="start-art-panel">
-          <div className="start-art-slides" aria-hidden>
-            {SLIDE_FILES.map((file, i) => (
-              <img
-                key={file}
-                src={publicImageUrl(file)}
-                alt=""
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-                className={`start-art-slide ${i === slide ? "start-art-slide--visible" : ""}`}
-                style={{ transitionDuration: `${SLIDE_FADE_MS}ms` }}
-              />
-            ))}
-          </div>
-          <div className="start-art-overlay" />
-        </div>
+        <div className="start-art-column" />
       </div>
     </div>
   );

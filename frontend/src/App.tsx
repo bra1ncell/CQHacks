@@ -1,26 +1,57 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import EventsView from "./EventsView.tsx";
+import RaceHubScreen from "./RaceHubScreen.tsx";
 import RaceLiveView from "./RaceLiveView.tsx";
+import RaceSessionScreen from "./RaceSessionScreen.tsx";
 import StartScreen, { type StartDestination } from "./StartScreen.tsx";
 
-type Screen = "menu" | StartDestination;
+type View = "intro" | "hub" | "session" | StartDestination;
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("menu");
+  const [view, setView] = useState<View>("intro");
+  const [sessionRound, setSessionRound] = useState<number | null>(null);
 
-  if (screen === "menu") {
+  const goHub = useCallback(() => setView("hub"), []);
+
+  if (view === "intro") {
     return (
       <StartScreen
+        onIntroComplete={goHub}
         onNavigate={(dest) => {
-          setScreen(dest);
+          setView(dest);
         }}
       />
     );
   }
 
-  if (screen === "events") {
-    return <EventsView onBack={() => setScreen("menu")} />;
+  if (view === "hub") {
+    return (
+      <RaceHubScreen
+        onBackToIntro={() => setView("intro")}
+        onRaceConfirmed={(round) => {
+          setSessionRound(round);
+          setView("session");
+        }}
+      />
+    );
   }
 
-  return <RaceLiveView onBack={() => setScreen("menu")} />;
+  if (view === "session" && sessionRound !== null) {
+    return (
+      <RaceSessionScreen
+        round={sessionRound}
+        onBack={() => {
+          setSessionRound(null);
+          setView("hub");
+        }}
+        onOpenRaceLive={() => setView("race-live")}
+      />
+    );
+  }
+
+  if (view === "events") {
+    return <EventsView onBack={() => setView("hub")} />;
+  }
+
+  return <RaceLiveView onBack={() => setView("hub")} />;
 }

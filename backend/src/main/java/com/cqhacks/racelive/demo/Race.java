@@ -29,6 +29,14 @@ public class Race {
         return eventName;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
     public void addDriver(Driver driver) {
         drivers.add(driver);
     }

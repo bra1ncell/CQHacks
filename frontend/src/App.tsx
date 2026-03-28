@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import RaceHubScreen from "./RaceHubScreen.tsx";
 import RaceLiveView from "./RaceLiveView.tsx";
 import RaceSessionScreen from "./RaceSessionScreen.tsx";
-import StartScreen, { type StartDestination } from "./StartScreen.tsx";
+import StartScreen from "./StartScreen.tsx";
 
-type View = "intro" | "hub" | "session" | StartDestination;
+type View = "intro" | "hub" | "session" | "race-live";
 
 export default function App() {
   const [view, setView] = useState<View>("intro");
@@ -13,14 +13,7 @@ export default function App() {
   const goHub = useCallback(() => setView("hub"), []);
 
   if (view === "intro") {
-    return (
-      <StartScreen
-        onIntroComplete={goHub}
-        onNavigate={(dest) => {
-          setView(dest);
-        }}
-      />
-    );
+    return <StartScreen onIntroComplete={goHub} />;
   }
 
   if (view === "hub") {

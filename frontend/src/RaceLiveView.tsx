@@ -96,11 +96,11 @@ export default function RaceLiveView({ onBack }: Props) {
   return (
     <div className="app race-live-app">
       <button type="button" className="back-link" onClick={onBack}>
-        ← Back to menu
+        ← Back to Race Selector
       </button>
       <header className="header">
-        <h1 className="title">Race Live</h1>
-        <p className="subtitle">CQHacks — results from CSV via API</p>
+        <h1 className="title">CSV Viewer (simple)</h1>
+        <p className="subtitle">Race LIVE — CSV tables via API</p>
       </header>
 
       <section className="toolbar">

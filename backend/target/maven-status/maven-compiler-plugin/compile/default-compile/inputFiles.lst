@@ -1,12 +1,16 @@
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/Race.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/LapTimesReader.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/config/DataPathsProperties.java
+/Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/dto/SessionStandingsRow.java
+/Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/dto/SessionFeaturedDriver.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/Lap.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/Driver.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/service/RaceDataService.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/CsvDemoMain.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/web/RaceController.java
+/Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/service/SessionPayloadService.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/RaceResultsReader.java
+/Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/dto/SessionPayload.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/service/DemoMainService.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/RaceLiveApplication.java
 /Users/americosilva/Desktop/CQHacks2/backend/src/main/java/com/cqhacks/racelive/demo/InsightGenerator.java

@@ -16,6 +16,24 @@ public class InsightGenerator {
         this.drivers = race.getDrivers();
     }
 
+    /** Driver who set the overall fastest lap in this race, or {@code null} if none. */
+    public Driver fastestLapDriver() {
+        Lap best = null;
+        Driver bestDriver = null;
+        for (Driver driver : drivers) {
+            for (Lap lap : driver.getLaps()) {
+                if (!hasValue(lap.lapTime)) {
+                    continue;
+                }
+                if (best == null || toMillis(lap.lapTime) < toMillis(best.lapTime)) {
+                    best = lap;
+                    bestDriver = driver;
+                }
+            }
+        }
+        return bestDriver;
+    }
+
     public ArrayList<String> generateAll() {
         insights.clear();
 

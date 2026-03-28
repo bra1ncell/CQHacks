@@ -1,18 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./StartScreen.css";
-
-export type StartDestination = "race-live";
 
 const INTRO_TOTAL_MS = 5000;
 const INTRO_FADE_MS = 800;
 
 type Props = {
-  onNavigate: (dest: StartDestination) => void;
-  /** Fires after intro duration (with fade). Skipped if user picks a menu item first. */
+  /** Fires after intro duration (with fade), or when the user skips with Enter / Space. */
   onIntroComplete: () => void;
 };
-
-const OPTIONS: { id: StartDestination; label: string }[] = [{ id: "race-live", label: "RACE LIVE" }];
 
 /** Files live in frontend/public/asset/images/ — Vite serves them at BASE_URL + asset/images/... */
 const SLIDE_FILES = ["1.jpg", "2.jpg", "3.jpg"] as const;
@@ -26,32 +21,27 @@ function publicImageUrl(file: string): string {
 const SLIDE_INTERVAL_MS = 1500;
 const SLIDE_FADE_MS = 450;
 
-function IconRaceLive() {
-  return (
-    <svg className="mk-icon-svg" viewBox="0 0 48 48" aria-hidden>
-      <circle cx="24" cy="24" r="18" fill="#37474f" stroke="#ff5252" strokeWidth="2" />
-      <circle cx="24" cy="24" r="14" fill="#263238" />
-      <path
-        d="M24 14 L24 24 L32 28"
-        fill="none"
-        stroke="#ff5252"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="24" cy="24" r="2.5" fill="#ff5252" />
-    </svg>
-  );
-}
-
-export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
-  const [index, setIndex] = useState(0);
+export default function StartScreen({ onIntroComplete }: Props) {
   const [slide, setSlide] = useState(0);
   const [exiting, setExiting] = useState(false);
+  const finishedRef = useRef(false);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const doneTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const confirm = useCallback(() => {
-    onNavigate(OPTIONS[index].id);
-  }, [index, onNavigate]);
+  const finishIntro = useCallback(() => {
+    if (finishedRef.current) {
+      return;
+    }
+    finishedRef.current = true;
+    if (fadeTimerRef.current) {
+      clearTimeout(fadeTimerRef.current);
+    }
+    if (doneTimerRef.current) {
+      clearTimeout(doneTimerRef.current);
+    }
+    setExiting(true);
+    onIntroComplete();
+  }, [onIntroComplete]);
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -62,30 +52,37 @@ export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
 
   useEffect(() => {
     const fadeAt = Math.max(0, INTRO_TOTAL_MS - INTRO_FADE_MS);
-    const fadeTimer = window.setTimeout(() => setExiting(true), fadeAt);
-    const doneTimer = window.setTimeout(() => onIntroComplete(), INTRO_TOTAL_MS);
+    fadeTimerRef.current = setTimeout(() => {
+      if (!finishedRef.current) {
+        setExiting(true);
+      }
+    }, fadeAt);
+    doneTimerRef.current = setTimeout(() => {
+      if (!finishedRef.current) {
+        finishedRef.current = true;
+        onIntroComplete();
+      }
+    }, INTRO_TOTAL_MS);
     return () => {
-      window.clearTimeout(fadeTimer);
-      window.clearTimeout(doneTimer);
+      if (fadeTimerRef.current) {
+        clearTimeout(fadeTimerRef.current);
+      }
+      if (doneTimerRef.current) {
+        clearTimeout(doneTimerRef.current);
+      }
     };
   }, [onIntroComplete]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        setIndex((i) => Math.min(i + 1, OPTIONS.length - 1));
-      } else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
-        e.preventDefault();
-        setIndex((i) => Math.max(i - 1, 0));
-      } else if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        confirm();
+        finishIntro();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [confirm]);
+  }, [finishIntro]);
 
   return (
     <div className={`start-screen ${exiting ? "start-screen--exiting" : ""}`}>
@@ -108,34 +105,7 @@ export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
 
       <div className="start-layout">
         <div className="start-menu-panel">
-          <p className="start-brand">CQHacks</p>
-          <nav className="start-nav" aria-label="Main menu">
-            {OPTIONS.map((opt, i) => {
-              const selected = i === index;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={`mk-menu-btn ${selected ? "mk-menu-btn--selected" : ""}`}
-                  onClick={() => {
-                    setIndex(i);
-                    onNavigate(opt.id);
-                  }}
-                  onMouseEnter={() => setIndex(i)}
-                  onFocus={() => setIndex(i)}
-                >
-                  <span className="mk-menu-btn__frame" aria-hidden>
-                    <IconRaceLive />
-                  </span>
-                  <span className="mk-menu-btn__track">
-                    <span className="mk-menu-btn__label">{opt.label}</span>
-                    {selected && <span className="mk-menu-btn__chevrons" aria-hidden />}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-          <p className="start-hint">Enter to open Race Live · or wait 5s for Race Selector</p>
+          <p className="start-brand">Race LIVE</p>
         </div>
 
         <div className="start-art-column" />

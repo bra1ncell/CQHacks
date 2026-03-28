@@ -2,6 +2,7 @@ package com.cqhacks.racelive.web;
 
 import com.cqhacks.racelive.service.DemoMainService;
 import com.cqhacks.racelive.service.RaceDataService;
+import com.cqhacks.racelive.service.SessionPayloadService;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +24,15 @@ public class RaceController {
 
     private final RaceDataService raceDataService;
     private final DemoMainService demoMainService;
+    private final SessionPayloadService sessionPayloadService;
 
-    public RaceController(RaceDataService raceDataService, DemoMainService demoMainService) {
+    public RaceController(
+            RaceDataService raceDataService,
+            DemoMainService demoMainService,
+            SessionPayloadService sessionPayloadService) {
         this.raceDataService = raceDataService;
         this.demoMainService = demoMainService;
+        this.sessionPayloadService = sessionPayloadService;
     }
 
     @GetMapping("/health")
@@ -41,6 +48,18 @@ public class RaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    /**
+     * Session view: standings from race results, insights + featured driver (fastest lap) from the same
+     * demo pipeline as {@link DemoMainService}.
+     */
+    @GetMapping("/session/{round}")
+    public ResponseEntity<?> sessionForRound(@PathVariable int round) {
+        return sessionPayloadService
+                .buildForRound(round)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "No race data")));
     }
 
     @GetMapping("/lap-times")

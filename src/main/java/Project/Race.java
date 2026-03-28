@@ -30,4 +30,24 @@ public class Race {
     ArrayList<Driver> getDrivers () {
         return drivers;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("╔══════════════════════════════════════════════════════╗\n")
+                .append("  Race   : ").append(eventName).append("\n")
+                .append("  Round  : ").append(round).append("\n")
+                .append("  Country: ").append(country).append("\n")
+                .append("  Circuit: ").append(location).append("\n")
+                .append("  Drivers: ").append(drivers.size()).append("\n")
+                .append("╚══════════════════════════════════════════════════════╝\n");
+
+        for (Driver driver : drivers) {
+            sb.append(driver.toString()).append("\n");
+        }
+
+        return sb.toString();
+    }
+
 }

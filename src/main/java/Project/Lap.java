@@ -81,4 +81,28 @@ public class Lap {
         this.fastF1Generated    = fastF1Generated;
         this.isAccurate         = isAccurate;
     }
+
+    @Override
+    public String toString() {
+        return  "        ┌─ Lap " + fmt(lapNumber) + (isPersonalBest ? "  ★ Personal Best" : "") + "\n" +
+                "        │  Date/Start   : " + fmt(lapStartDate) + "  " + fmt(lapStartTime) + "\n" +
+                "        │  Lap Time     : " + fmt(lapTime) + "\n" +
+                "        │  Position     : " + fmt(position) + "   Stint: " + fmt(stint) + "\n" +
+                "        │  Sectors      : S1=" + fmt(sector1Time) +
+                "  S2=" + fmt(sector2Time) +
+                "  S3=" + fmt(sector3Time) + "\n" +
+                "        │  Speeds(km/h) : I1=" + fmt(speedI1) +
+                "  I2=" + fmt(speedI2) +
+                "  FL=" + fmt(speedFL) +
+                "  ST=" + fmt(speedST) + "\n" +
+                "        │  Tyre         : " + fmt(compound) +
+                "  Life=" + fmt(tyreLife) +
+                "  Fresh=" + freshTyre + "\n" +
+                "        │  Pit Out      : " + fmt(pitOutTime) + "\n" +
+                "        │  Pit In       : " + fmt(pitInTime) + "\n" +
+                "        │  Track Status : " + fmt(trackStatus) + "\n" +
+                "        │  Deleted      : " + deleted + (deleted ? "  Reason: " + fmt(deletedReason) : "") + "\n" +
+                "        │  Accurate     : " + isAccurate + "   FastF1Generated: " + fastF1Generated + "\n" +
+                "        └─────────────────────────────────────────────";
+    }
 }

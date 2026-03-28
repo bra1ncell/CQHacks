@@ -25,4 +25,22 @@ public class Driver {
     ArrayList<Lap> getLaps() {
         return laps;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("    ┌─ Driver : ").append(name)
+                .append("  (#").append(driverNumber).append(")")
+                .append("  Team: ").append(team).append("\n")
+                .append("    │  Laps driven : ").append(laps.size()).append("\n");
+
+        for (Lap lap : laps) {
+            sb.append(lap.toString()).append("\n");
+        }
+
+        sb.append("    └─────────────────────────────────────────────────────");
+
+        return sb.toString();
+    }
 }

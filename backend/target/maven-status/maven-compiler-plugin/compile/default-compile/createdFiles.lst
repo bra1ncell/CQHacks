@@ -1,5 +1,12 @@
-com/cqhacks/racelive/config/DataPathsProperties.class
-com/cqhacks/racelive/service/RaceDataService.class
 com/cqhacks/racelive/web/RaceController.class
+com/cqhacks/racelive/service/DemoMainService.class
+com/cqhacks/racelive/demo/CsvDemoMain.class
+com/cqhacks/racelive/demo/LapTimesReader.class
+com/cqhacks/racelive/demo/Lap.class
 com/cqhacks/racelive/RaceLiveApplication.class
 com/cqhacks/racelive/config/WebConfig.class
+com/cqhacks/racelive/demo/Race.class
+com/cqhacks/racelive/config/DataPathsProperties.class
+com/cqhacks/racelive/service/RaceDataService.class
+com/cqhacks/racelive/demo/Driver.class
+com/cqhacks/racelive/demo/RaceResultsReader.class

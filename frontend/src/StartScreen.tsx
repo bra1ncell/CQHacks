@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import "./StartScreen.css";
 
-export type StartDestination = "events" | "race-live";
+export type StartDestination = "race-live";
 
-const INTRO_TOTAL_MS = 3000;
+const INTRO_TOTAL_MS = 5000;
 const INTRO_FADE_MS = 800;
 
 type Props = {
@@ -12,10 +12,7 @@ type Props = {
   onIntroComplete: () => void;
 };
 
-const OPTIONS: { id: StartDestination; label: string }[] = [
-  { id: "events", label: "Events" },
-  { id: "race-live", label: "RACE LIVE" },
-];
+const OPTIONS: { id: StartDestination; label: string }[] = [{ id: "race-live", label: "RACE LIVE" }];
 
 /** Files live in frontend/public/asset/images/ — Vite serves them at BASE_URL + asset/images/... */
 const SLIDE_FILES = ["1.jpg", "2.jpg", "3.jpg"] as const;
@@ -26,35 +23,23 @@ function publicImageUrl(file: string): string {
   return `${prefix}asset/images/${file}`;
 }
 
-const SLIDE_INTERVAL_MS = 5500;
-const SLIDE_FADE_MS = 1200;
-
-function IconEvents() {
-  return (
-    <svg className="mk-icon-svg" viewBox="0 0 48 48" aria-hidden>
-      <rect x="8" y="10" width="32" height="28" rx="3" fill="#4fc3f7" stroke="#0277bd" strokeWidth="2" />
-      <rect x="12" y="14" width="24" height="6" rx="1" fill="#fff9c4" />
-      <rect x="14" y="24" width="6" height="6" rx="1" fill="#e53935" />
-      <rect x="22" y="24" width="6" height="6" rx="1" fill="#fff" />
-      <rect x="30" y="24" width="6" height="6" rx="1" fill="#43a047" />
-    </svg>
-  );
-}
+const SLIDE_INTERVAL_MS = 1500;
+const SLIDE_FADE_MS = 450;
 
 function IconRaceLive() {
   return (
     <svg className="mk-icon-svg" viewBox="0 0 48 48" aria-hidden>
-      <circle cx="24" cy="24" r="18" fill="#37474f" stroke="#ffd54a" strokeWidth="2" />
+      <circle cx="24" cy="24" r="18" fill="#37474f" stroke="#ff5252" strokeWidth="2" />
       <circle cx="24" cy="24" r="14" fill="#263238" />
       <path
         d="M24 14 L24 24 L32 28"
         fill="none"
-        stroke="#ffd54a"
+        stroke="#ff5252"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="24" cy="24" r="2.5" fill="#ffd54a" />
+      <circle cx="24" cy="24" r="2.5" fill="#ff5252" />
     </svg>
   );
 }
@@ -140,7 +125,7 @@ export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
                   onFocus={() => setIndex(i)}
                 >
                   <span className="mk-menu-btn__frame" aria-hidden>
-                    {opt.id === "events" ? <IconEvents /> : <IconRaceLive />}
+                    <IconRaceLive />
                   </span>
                   <span className="mk-menu-btn__track">
                     <span className="mk-menu-btn__label">{opt.label}</span>
@@ -150,7 +135,7 @@ export default function StartScreen({ onNavigate, onIntroComplete }: Props) {
               );
             })}
           </nav>
-          <p className="start-hint">↑↓ navigate · Enter to select</p>
+          <p className="start-hint">Enter to open Race Live · or wait 5s for Race Selector</p>
         </div>
 
         <div className="start-art-column" />

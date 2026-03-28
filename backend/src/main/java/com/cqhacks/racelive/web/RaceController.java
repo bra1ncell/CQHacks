@@ -1,11 +1,15 @@
 package com.cqhacks.racelive.web;
 
+import com.cqhacks.racelive.service.DemoMainService;
 import com.cqhacks.racelive.service.RaceDataService;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class RaceController {
 
     private final RaceDataService raceDataService;
+    private final DemoMainService demoMainService;
 
-    public RaceController(RaceDataService raceDataService) {
+    public RaceController(RaceDataService raceDataService, DemoMainService demoMainService) {
         this.raceDataService = raceDataService;
+        this.demoMainService = demoMainService;
     }
 
     @GetMapping("/health")
@@ -50,5 +56,29 @@ public class RaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    /** Team Main.java reference + ported CsvDemoMain source (race session UI). */
+    @GetMapping(value = "/demo/main-source", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> demoMainSource() throws IOException {
+        String legacy = readDemoResource("demo/OriginalMain.java.txt");
+        String ported = readDemoResource("demo/CsvDemoMain.java");
+        String body =
+                "/* ─── Original team Main.java (reference) ─── */\n\n" + legacy + "\n\n/* ─── Ported: CsvDemoMain.java (Spring Boot) ─── */\n\n" + ported;
+        return ResponseEntity.ok(body);
+    }
+
+    /** Same idea as {@code System.out.println(races.get(0))} using LapTimes.csv. */
+    @GetMapping(value = "/demo/main-output", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> demoMainOutput(@RequestParam(defaultValue = "1") int round) {
+        return ResponseEntity.ok(demoMainService.runDemoForRound(round));
+    }
+
+    private static String readDemoResource(String path) throws IOException {
+        ClassPathResource res = new ClassPathResource(path);
+        if (!res.exists()) {
+            return "// (missing resource: " + path + ")\n";
+        }
+        return res.getContentAsString(StandardCharsets.UTF_8);
     }
 }

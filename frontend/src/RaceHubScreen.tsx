@@ -8,8 +8,6 @@ import {
 } from "./racesData.ts";
 import "./RaceHubScreen.css";
 
-const GRID_COLS = 5;
-
 const RACE_SELECTOR_AURORA_STOPS = ["#ec0004", "#dce5e9", "#f50600"] as const;
 
 type Props = {
@@ -22,8 +20,17 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
   const [selected, setSelected] = useState(0);
   const [entered, setEntered] = useState(false);
   const [fsRace, setFsRace] = useState<RaceCard | null>(null);
+  const [gridCols, setGridCols] = useState(5);
   const userHasClickedGrid = useRef(false);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 720px)");
+    const sync = () => setGridCols(mq.matches ? 2 : 5);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntered(true));
@@ -73,10 +80,10 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
         setSelected((s) => Math.max(s - 1, 0));
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelected((s) => Math.min(s + GRID_COLS, max));
+        setSelected((s) => Math.min(s + gridCols, max));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelected((s) => Math.max(s - GRID_COLS, 0));
+        setSelected((s) => Math.max(s - gridCols, 0));
       } else if (e.key === "Enter") {
         e.preventDefault();
         beginTransition(HARDCODED_RACES[selected]);
@@ -87,7 +94,7 @@ export default function RaceHubScreen({ onRaceConfirmed, onBackToIntro }: Props)
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selected, fsRace, beginTransition, onBackToIntro]);
+  }, [selected, fsRace, gridCols, beginTransition, onBackToIntro]);
 
   const handleCardClick = (i: number) => {
     if (!userHasClickedGrid.current) {

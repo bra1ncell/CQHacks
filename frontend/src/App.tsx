@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import EventsView from "./EventsView.tsx";
 import RaceHubScreen from "./RaceHubScreen.tsx";
 import RaceLiveView from "./RaceLiveView.tsx";
 import RaceSessionScreen from "./RaceSessionScreen.tsx";
@@ -47,10 +46,6 @@ export default function App() {
         onOpenRaceLive={() => setView("race-live")}
       />
     );
-  }
-
-  if (view === "events") {
-    return <EventsView onBack={() => setView("hub")} />;
   }
 
   return <RaceLiveView onBack={() => setView("hub")} />;

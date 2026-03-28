@@ -1,17 +1,15 @@
 .race-hub {
-  --race-hub-row-gap: 1.6rem;
-  --race-hub-col-gap: 1rem;
+  --race-hub-row-gap: 1.15rem;
+  --race-hub-col-gap: 0.75rem;
   --race-hub-accent: #e81515;
   --race-hub-accent-hot: #ff3b30;
   --race-hub-glow: rgba(236, 0, 4, 0.55);
-  /* ~thumb + label (2-line titles) + borders; tuned so ~3 rows fit in max-height below */
-  --race-hub-card-block: calc(100px + 4.35rem);
 
   position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 1.25rem clamp(1.75rem, 6vw, 3.75rem) 1.5rem;
+  padding: 2.5rem clamp(2.5rem, 6vw, 3.75rem) 1.5rem;
   background: #050508;
   color: #f5f5f5;
   opacity: 0;
@@ -82,25 +80,25 @@
 .race-hub__section {
   position: relative;
   z-index: 3;
-  flex: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 0;
-  padding: clamp(2rem, 5vh, 3.5rem) 0 0;
+  padding: 0.15rem 0 0;
 }
 
-/* Vertical scroll; 5 per row; only ~3 rows tall before scrolling */
+/* Fills space between header and footer; taller viewports show more rows (no fixed row cap) */
 .race-hub__grid-scroll {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0;
-  max-height: calc(3 * var(--race-hub-card-block) + 2 * var(--race-hub-row-gap));
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0.65rem 0 1.1rem;
+  padding: 0 0 0.65rem;
   margin-top: 0;
-  mask-image: linear-gradient(180deg, transparent, #000 0.75rem, #000 calc(100% - 0.75rem), transparent);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 0.75rem, #000 calc(100% - 0.75rem), transparent);
+  /* Short fade only at scroll edges so large layouts aren’t cut off mid-screen */
+  mask-image: linear-gradient(180deg, transparent, #000 0.5rem, #000 calc(100% - 0.5rem), transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 0.5rem, #000 calc(100% - 0.5rem), transparent);
   scrollbar-width: thin;
   scrollbar-color: rgba(232, 21, 21, 0.45) rgba(0, 0, 0, 0.3);
 }
@@ -125,18 +123,25 @@
   row-gap: var(--race-hub-row-gap);
   column-gap: var(--race-hub-col-gap);
   align-content: start;
+  container-type: inline-size;
 }
 
 .race-card {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  /* wider than tall */
+  aspect-ratio: 4 / 3;
   padding: 0;
-  border: none;
-  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
   background: transparent;
-  transition: transform 0.2s ease;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .race-card:hover {
@@ -150,11 +155,12 @@
 
 .race-card__thumb {
   position: relative;
-  height: 100px;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
   overflow: hidden;
-  border-radius: 12px 12px 0 0;
-  border: 3px solid rgba(255, 255, 255, 0.85);
-  border-bottom: none;
+  border: none;
+  border-radius: 0;
   box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -171,20 +177,20 @@
 .race-card__label {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.4rem 0.45rem 0.5rem;
-  border-radius: 0 0 12px 12px;
+  gap: 0.12rem;
+  flex: 0 0 auto;
+  padding: 0.35rem 0.4rem 0.4rem;
+  border: none;
+  border-radius: 0;
   background: #f5f5f5;
   color: #111;
-  border: 3px solid rgba(255, 255, 255, 0.85);
-  border-top: none;
-  min-height: 3.35rem;
+  min-height: 2.75rem;
   justify-content: center;
 }
 
 .race-card__name {
   font-family: "Archivo Black", sans-serif;
-  font-size: 0.58rem;
+  font-size: clamp(0.58rem, calc(0.48rem + 0.85cqw), 0.74rem);
   font-style: italic;
   line-height: 1.2;
   letter-spacing: 0.01em;
@@ -195,32 +201,31 @@
 }
 
 .race-card__loc {
-  font-size: 0.58rem;
+  font-size: clamp(0.55rem, calc(0.45rem + 0.65cqw), 0.68rem);
   color: #444;
   font-weight: 600;
 }
 
 /* MK8-style selection — red glow */
-.race-card--selected .race-card__thumb {
+.race-card--selected {
   border-color: var(--race-hub-accent-hot);
   box-shadow:
     0 0 0 2px var(--race-hub-accent-hot),
-    0 0 28px var(--race-hub-glow),
-    inset 0 -20px 40px rgba(0, 0, 0, 0.35);
+    0 0 28px var(--race-hub-glow);
+  filter: drop-shadow(0 0 14px var(--race-hub-glow));
+}
+
+.race-card--selected .race-card__thumb {
+  box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.35);
 }
 
 .race-card--selected .race-card__label {
   background: linear-gradient(180deg, #ff3b30 0%, #b71c1c 100%);
-  border-color: var(--race-hub-accent-hot);
   color: #fff8f6;
 }
 
 .race-card--selected .race-card__loc {
   color: rgba(255, 255, 255, 0.88);
-}
-
-.race-card--selected {
-  filter: drop-shadow(0 0 14px var(--race-hub-glow));
 }
 
 .race-hub__footer {
@@ -355,32 +360,35 @@
 
 @media (max-width: 720px) {
   .race-hub {
-    --race-hub-row-gap: 1.35rem;
-    --race-hub-col-gap: 0.65rem;
-    --race-hub-card-block: calc(72px + 4rem);
+    --race-hub-row-gap: 1.1rem;
+    --race-hub-col-gap: 0.55rem;
     padding-left: clamp(1.25rem, 5vw, 2rem);
     padding-right: clamp(1.25rem, 5vw, 2rem);
   }
 
   .race-hub__section {
-    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    padding-top: 0.15rem;
   }
 
-  .race-card__thumb {
-    height: 72px;
+  .race-hub__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .race-card {
+    aspect-ratio: 4 / 3;
   }
 
   .race-card__name {
-    font-size: 0.52rem;
+    font-size: clamp(0.62rem, 3.2cqi, 0.76rem);
     -webkit-line-clamp: 3;
   }
 
   .race-card__loc {
-    font-size: 0.52rem;
+    font-size: clamp(0.58rem, 2.8cqi, 0.7rem);
   }
 
   .race-card__label {
-    min-height: 2.5rem;
-    padding: 0.35rem 0.35rem 0.45rem;
+    min-height: 2.65rem;
+    padding: 0.35rem 0.4rem 0.42rem;
   }
 }

@@ -53,13 +53,6 @@ public class RaceResultsReader {
             br.readLine();
             String line;
 
-            while ((line = br.readLine()) != null) {
-                String[] tokens = line.split(",");
-                for (String token : tokens) {
-
-                }
-            }
-
         } catch (IOException e) {
             System.out.println("File not found! " + e.getMessage());
         }
